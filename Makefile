@@ -3,10 +3,10 @@ LLD         ?= 0
 ASAN        ?= 0
 EXPERIMENTAL?= 0
 
-ELF         := fado.elf
+ELF         := fado.exe
 
-CC          := $(shell ./find_program.sh gcc clang clang-[0-9][0-9] clang-[0-9])
-LD          := $(shell ./find_program.sh ld ld.lld ld.lld-*)
+CC          := i686-w64-mingw32-gcc
+LD          := i686-w64-mingw32-ld
 INC         := -I include -I lib
 WARNINGS    := -Wall -Wextra -Wpedantic -Wshadow -Werror=implicit-function-declaration -Wvla -Wno-unused-function 
 CFLAGS      := -std=c11
@@ -36,9 +36,7 @@ ifneq ($(EXPERIMENTAL),0)
 endif
 
 # GCC is too stupid to be trusted with these warnings
-ifeq ($(CC),gcc)
-  WARNINGS += -Wno-implicit-fallthrough -Wno-maybe-uninitialized
-endif
+WARNINGS += -Wno-implicit-fallthrough -Wno-maybe-uninitialized
 
 SRC_DIRS    := $(shell find src -type d)
 C_FILES     := $(foreach dir,$(SRC_DIRS),$(wildcard $(dir)/*.c))
